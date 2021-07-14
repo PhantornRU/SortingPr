@@ -1,0 +1,10 @@
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.csprojAssemblyReference.cache
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.Properties.Resources.resources
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.csproj.GenerateResource.cache
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.csproj.CoreCompileInputs.cache
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\bin\Debug\Sorting2D.exe.config
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\bin\Debug\Sorting2D.exe
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\bin\Debug\Sorting2D.pdb
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.Form1.resources
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.exe
+D:\3 курс\Практика\Сортировка товаров по контейнерам\Sorting2D\Sorting2D\obj\Debug\Sorting2D.pdb

@@ -1,0 +1,20 @@
+Container: #C1 Name:Container 5x5
+Container: #C2 Name:Container 15x15
+Container: #C3 Name:Container 20x20
+Container: #C4 Name:Container 10x15
+Container: #C5 Name:Container 30x10
+Object: #O1 #P1 Name:Object 2x1
+Object: #O2 #P1 Name:Object 1x1
+Object: #O3 #P1 Name:Object 2x2
+Object: #O4 #P2 Name:Object 3x3
+Object: #O5 #P3 Name:Object 5x5
+Object: #O6 #P3 Name:Object 1x2
+Object: #O7 #P4 Name:Object 2x1
+Object: #O8 #P5 Name:Object 3x3
+Object: #O9 #P6 Name:Object 10x5
+Object: #O10 #P7 Name:Object 4x4
+Object: #O11 #P7 Name:Object 4x2
+Object: #O12 #P8 Name:Object 1x1
+Object: #O13 #P9 Name:Object 1x3
+Object: #O14 #P10 Name:Object 2x2
+Object: #O15 #P11 Name:Object 1x5
