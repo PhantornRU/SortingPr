@@ -13,36 +13,93 @@ namespace Sorting2D
 {
     public partial class Form1 : Form
     {
-        Container[] cont = new Container[32];
-        ObjectGoods[] obj = new ObjectGoods[128];
 
         public Form1()
         {
             InitializeComponent();
+
+            dra = CreateGraphics();
         }
+
+        List<Container> containers = new List<Container>();
+        List<ObjectGoods> objectsGoods = new List<ObjectGoods>();
+
+        public Graphics dra;
+        public SolidBrush sb = new SolidBrush(Color.Black);
+        public Pen pen = new Pen(new SolidBrush(Color.Black), 3);
 
         private void buttonTest_Click(object sender, EventArgs e)
         {
-            cont[1] = new Container(1, "Контейнер", 10, 5);
-            cont[1].x = 10;
-            cont[1].y = 5;
-            cont[1].z = 0;
-            cont[1].GetInfo();
+            this.Invalidate();
 
-            obj[1] = new ObjectGoods(1, 1, "Товар", 1, 1);
-            obj[1].x = 1;
-            obj[1].y = 2;
-            obj[1].z = 3;
-            obj[1].GetInfo();
+            containers.Add(new Container(1, "Контейнер1", 10, 5));
+            containers.Add(new Container(2, "Контейнер2", 5, 5));
+            containers.Add(new Container(3, "Контейнер3", 15, 15));
+            objectsGoods.Add(new ObjectGoods(1, 1, "Товар", 10, 10));
+
+
+            Console.WriteLine($"До сортировки:");
+            foreach (var item in containers)
+            {
+                item.GetInfo();
+            }
+
+            //Сортируем контейнеры от большего к меньшему
+            SizeComparer sc = new SizeComparer();
+            containers.Sort(sc);
+
+            Console.WriteLine($"");
+            Console.WriteLine($"После сортировки:");
+            foreach (var item in objectsGoods)
+            {
+                item.GetInfo();
+                item.x = 50;
+                item.y = 50;
+                item.Visual(dra, pen); //!!! проблема с dra
+            }
+
+            //List<int> sortingToContainers = new List<int>();
+            //sortingToContainers.Add((int)AlgorithmType.EB_AFIT);
+            //List<ContainerPackingResult> result = PackingService.Pack(containers, objectsGoods, sortingToContainers);
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             loadList(@"ListContainersObjects#1.txt");
-            //loadObjects(@"ObjectsGoods#1.txt");
+
 
         }
-        private void loadList(string pathFile)
+        private void sortForBigger() 
+        { 
+
+        }
+
+
+        private void sortingToContainers()
+        {
+            //проблема в том что неясно как выразить itemObjHight чтобы он стал нашим временным значением
+
+            foreach (var container in containers)
+            {
+                foreach (var product in objectsGoods.OrderByDescending(o => o.height))
+                {
+                    if (container.heightNoUse > product.height & container.weightNoUse > product.weight)
+                    {
+                        container.heightNoUse -= product.height;
+                        container.weightNoUse -= product.weight;
+                        container.products.Add(product);
+                    }
+                };
+            }
+
+            //Сортируем контейнеры по возрастанию
+            var sortedContainers = from c in containers
+                              orderby c.number
+                              select c;
+            foreach (Container c in sortedContainers) c.GetInfo();
+        }
+
+        private void loadList(string pathFile) //загрузка списка для тестов
         {
             StreamReader rewriteMass = new StreamReader(pathFile, System.Text.Encoding.Default);
 
@@ -56,7 +113,6 @@ namespace Sorting2D
             bool checkContainer = false;
             bool checkObject = false;
 
-            //string sPattern = "#C(ir)?";
             while ((textline = rewriteMass.ReadLine()) != null)
             {
                 string[] symbs = textline.Split(' ');
@@ -114,58 +170,41 @@ namespace Sorting2D
                 //Console.WriteLine($"Номер: {number}, Наименование: {name} [{height}х{weight}x{depth}]");
                 if (localnumber == 0)
                 {
-                    cont[number] = new Container(number, name, weight, depth);
-                    cont[number].GetInfo();
+
+                    containers.Add(new Container(number, name, weight, depth));
                 }
                 else
                 {
-                    obj[number] = new ObjectGoods(number, localnumber, name, weight, depth);
-                    obj[number].GetInfo();
+                    objectsGoods.Add(new ObjectGoods(number, localnumber, name, weight, depth));
                 }
-
             }
+
+            foreach (var item in containers)
+            {
+                //Console.WriteLine($"Номер: #C{item.number}, Наименование: {item.name} [{item.height}x{item.weight}x{item.depth}], Координаты: [{item.x};{item.y};{item.z}]");
+            };
+
+            foreach (var item in objectsGoods)
+            {
+                Console.WriteLine($"Номер: #O{item.number}, Партия: #P{item.localnumber}, Наименование: {item.name} [{item.height}x{item.weight}], Координаты: [{item.x};{item.y};{item.z}]");
+            };
         }
     }
 
-
-    //Формат CSV / JSON
-    // Сереализация, десеариализация
-
-    public class Container
+    class SizeComparer : IComparer<Container> //сортировка по объему
     {
-        public string name; //наименование контейнера
-        public int number; //номер контейнера
-        public int height, weight, depth; //ширина, высота, глубина
-        public int x, y, z; //координаты
-
-        public Container(int n, string na, int h, int w) //конструктор двухмерный
-        { number = n; name = na; height = h; weight = w; }
-
-        public Container(int n, string na, int h, int w, int d) //конструктор трехмерный
-        { number = n; name = na; height = h; weight = w; depth = d; }
-
-        public void GetInfo()
+        public int Compare(Container o1, Container o2)
         {
-            Console.WriteLine($"Номер: #C{number}, Наименование: {name} [{height}x{weight}x{depth}], Координаты: [{x};{y};{z}]");
-        }
-    }
+            if (o1.weight * o1.height > o2.weight * o2.height)
+            {
+                return 1;
+            }
+            else if (o1.weight * o1.height < o2.weight * o2.height)
+            {
+                return -1;
+            }
 
-    public class ObjectGoods //объекты товары
-    {
-        public string name; //наименование заказа
-        public int number, localnumber; //номер заказа и личный номер заказа (партия заказов)
-        public int height, weight, depth; //ширина, высота, глубина
-        public int x, y, z; //координаты
-
-        public ObjectGoods(int n, int ln, string na, int h, int w) //конструктор двухмерный
-        { number = n; localnumber = ln; name = na; height = h; weight = w; }
-
-        public ObjectGoods(int n, int ln, string na, int h, int w, int d) //конструктор трехмерный
-        { number = n; localnumber = ln; name = na; height = h; weight = w; depth = d; }
-
-        public void GetInfo()
-        {
-            Console.WriteLine($"Номер: #O{number}, Партия: #P{localnumber}, Наименование: {name} [{height}x{weight}], Координаты: [{x};{y};{z}]");
+            return 0;
         }
     }
 }

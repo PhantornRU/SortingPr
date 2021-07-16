@@ -11,10 +11,14 @@ Object: #O5 #P3 Name:Object 5x5
 Object: #O6 #P3 Name:Object 1x2
 Object: #O7 #P4 Name:Object 2x1
 Object: #O8 #P5 Name:Object 3x3
-Object: #O9 #P6 Name:Object 10x5
+Object: #O9 #P6 Name:Object 8x4
 Object: #O10 #P7 Name:Object 4x4
 Object: #O11 #P7 Name:Object 4x2
 Object: #O12 #P8 Name:Object 1x1
 Object: #O13 #P9 Name:Object 1x3
 Object: #O14 #P10 Name:Object 2x2
 Object: #O15 #P11 Name:Object 1x5
+Object: #O16 #P12 Name:Object 1x1
+Object: #O17 #P12 Name:Object 2x2
+Object: #O18 #P12 Name:Object 2x1
+Object: #O19 #P12 Name:Object 1x1
