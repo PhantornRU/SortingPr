@@ -30,11 +30,12 @@
         {
             this.buttonTest = new System.Windows.Forms.Button();
             this.buttonLoad = new System.Windows.Forms.Button();
+            this.buttonSort = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonTest
             // 
-            this.buttonTest.Location = new System.Drawing.Point(208, 66);
+            this.buttonTest.Location = new System.Drawing.Point(226, 66);
             this.buttonTest.Name = "buttonTest";
             this.buttonTest.Size = new System.Drawing.Size(125, 48);
             this.buttonTest.TabIndex = 0;
@@ -44,7 +45,7 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(208, 12);
+            this.buttonLoad.Location = new System.Drawing.Point(226, 12);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(125, 48);
             this.buttonLoad.TabIndex = 1;
@@ -52,11 +53,22 @@
             this.buttonLoad.UseVisualStyleBackColor = true;
             this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
+            // buttonSort
+            // 
+            this.buttonSort.Location = new System.Drawing.Point(226, 120);
+            this.buttonSort.Name = "buttonSort";
+            this.buttonSort.Size = new System.Drawing.Size(125, 48);
+            this.buttonSort.TabIndex = 2;
+            this.buttonSort.Text = "Сортировка";
+            this.buttonSort.UseVisualStyleBackColor = true;
+            this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(345, 254);
+            this.ClientSize = new System.Drawing.Size(356, 202);
+            this.Controls.Add(this.buttonSort);
             this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.buttonTest);
             this.Name = "Form1";
@@ -69,6 +81,7 @@
 
         private System.Windows.Forms.Button buttonTest;
         private System.Windows.Forms.Button buttonLoad;
+        private System.Windows.Forms.Button buttonSort;
     }
 }
 

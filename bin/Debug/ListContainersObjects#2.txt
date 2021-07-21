@@ -1,0 +1,24 @@
+Container: #C1 Name:Container 100x50
+Container: #C2 Name:Container 150x150
+Container: #C3 Name:Container 200x200
+Container: #C4 Name:Container 100x150
+Container: #C5 Name:Container 300x100
+Object: #O1 #P1 Name:Object 20x10
+Object: #O2 #P1 Name:Object 10x10
+Object: #O3 #P1 Name:Object 20x20
+Object: #O4 #P2 Name:Object 30x30
+Object: #O5 #P3 Name:Object 50x50
+Object: #O6 #P3 Name:Object 10x20
+Object: #O7 #P4 Name:Object 20x10
+Object: #O8 #P5 Name:Object 30x30
+Object: #O9 #P6 Name:Object 80x40
+Object: #O10 #P7 Name:Object 40x40
+Object: #O11 #P7 Name:Object 40x20
+Object: #O12 #P8 Name:Object 10x10
+Object: #O13 #P9 Name:Object 10x30
+Object: #O14 #P10 Name:Object 20x20
+Object: #O15 #P11 Name:Object 10x50
+Object: #O16 #P12 Name:Object 10x10
+Object: #O17 #P12 Name:Object 20x20
+Object: #O18 #P12 Name:Object 20x10
+Object: #O19 #P12 Name:Object 10x10

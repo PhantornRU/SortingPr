@@ -7,27 +7,27 @@ namespace Sorting2D
     {
         public string name; //наименование заказа
         public int number, localnumber; //номер заказа и личный номер заказа (партия заказов)
-        public int height, weight, depth; //ширина, высота, глубина
+        public int weight, height, depth; //ширина, высота, глубина
         public int x, y, z; //координаты
         public bool place = false; //Размещен или нет
 
-        public ObjectGoods(int n, int ln, string na, int h, int w) //конструктор двухмерный
-        { number = n; localnumber = ln; name = na; height = h; weight = w; }
+        public ObjectGoods(int n, int ln, string na, int w, int h) //конструктор двухмерный
+        { number = n; localnumber = ln; name = na; weight = w; height = h; }
 
-        public ObjectGoods(int n, int ln, string na, int h, int w, int d) //конструктор трехмерный
-        { number = n; localnumber = ln; name = na; height = h; weight = w; depth = d; }
+        public ObjectGoods(int n, int ln, string na, int w, int h, int d) //конструктор трехмерный
+        { number = n; localnumber = ln; name = na; weight = w; height = h; depth = d; }
 
         public void GetInfo()
         {
-            Console.WriteLine($"Номер: #O{number}, Партия: #P{localnumber}, Наименование: {name} [{height}x{weight}], Координаты: [{x};{y};{z}]");
+            Console.WriteLine($"Номер: #O{number}, Партия: #P{localnumber}, Наименование: {name} [{weight}x{height}], Координаты: [{x};{y};{z}]");
         }
         public void Visual(Graphics dra, Pen pen)
         {
-            dra.DrawRectangle(new Pen(new SolidBrush(Color.Black), 3), 0, 0, 100, 100);
+            dra.DrawRectangle(new Pen(new SolidBrush(Color.Black), 3), x, y, weight, height);
         }
         //public void visual(e.Graphics dra, Pen pen)
         //{
-        //    dra.DrawRectangle(pen, x, y, x + height, y + weight);
+        //    dra.DrawRectangle(pen, x, y, height, weight);
         //}
     }
 }

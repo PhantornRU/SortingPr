@@ -17,7 +17,6 @@ namespace Sorting2D
         public Form1()
         {
             InitializeComponent();
-
             dra = CreateGraphics();
         }
 
@@ -30,73 +29,209 @@ namespace Sorting2D
 
         private void buttonTest_Click(object sender, EventArgs e)
         {
-            this.Invalidate();
+            //this.Invalidate();
 
-            containers.Add(new Container(1, "Контейнер1", 10, 5));
-            containers.Add(new Container(2, "Контейнер2", 5, 5));
-            containers.Add(new Container(3, "Контейнер3", 15, 15));
-            objectsGoods.Add(new ObjectGoods(1, 1, "Товар", 10, 10));
+            containers.Add(new Container(1, "Контейнер1", 150, 150));
+            //containers.Add(new Container(2, "Контейнер2", 80, 80));
+            //containers.Add(new Container(3, "Контейнер3", 200, 200));
+            objectsGoods.Add(new ObjectGoods(1, 1, "Монитор", 100, 100));
+            objectsGoods.Add(new ObjectGoods(2, 2, "Клавиатура", 30, 30));
+            objectsGoods.Add(new ObjectGoods(3, 2, "Товар3", 20, 20));
+            objectsGoods.Add(new ObjectGoods(4, 1, "Товар4", 50, 30));
+            objectsGoods.Add(new ObjectGoods(5, 1, "Товар5", 80, 20));
+            objectsGoods.Add(new ObjectGoods(6, 1, "Товар6", 30, 20));
+            objectsGoods.Add(new ObjectGoods(7, 1, "Товар7", 10, 20));
+            objectsGoods.Add(new ObjectGoods(8, 1, "Товар8", 30, 10));
+            objectsGoods.Add(new ObjectGoods(9, 1, "Товар9", 10, 40));
 
-
-            Console.WriteLine($"До сортировки:");
-            foreach (var item in containers)
-            {
-                item.GetInfo();
-            }
-
-            //Сортируем контейнеры от большего к меньшему
-            SizeComparer sc = new SizeComparer();
-            containers.Sort(sc);
-
-            Console.WriteLine($"");
-            Console.WriteLine($"После сортировки:");
-            foreach (var item in objectsGoods)
-            {
-                item.GetInfo();
-                item.x = 50;
-                item.y = 50;
-                item.Visual(dra, pen); //!!! проблема с dra
-            }
-
-            //List<int> sortingToContainers = new List<int>();
-            //sortingToContainers.Add((int)AlgorithmType.EB_AFIT);
-            //List<ContainerPackingResult> result = PackingService.Pack(containers, objectsGoods, sortingToContainers);
+            //testSorting();
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
-            loadList(@"ListContainersObjects#1.txt");
-
-
-        }
-        private void sortForBigger() 
-        { 
-
+            loadList(@"ListContainersObjects#2.txt");
         }
 
+        private void buttonSort_Click(object sender, EventArgs e)
+        {
+
+            //Сортируем контейнеры от большего к меньшему
+            SizeComparerContainers scc = new SizeComparerContainers();
+            containers.Sort(scc);
+
+            //Сортируем продукты от большего к меньшему
+            SizeComparerProducts sco = new SizeComparerProducts();
+            objectsGoods.Sort(sco);
+
+            sortingToContainers();
+            foreach (var container in containers) container.Visual(dra, pen);
+
+            Console.WriteLine($"");
+            Console.WriteLine($"Размещение:");
+            foreach (var container in containers)
+            {
+                container.GetInfo();
+                foreach (var product in container.products)
+                {
+                    product.GetInfo();
+                    product.Visual(dra, pen);
+                }
+            }
+        }
+
+        Font fnt = new System.Drawing.Font("Arial", 10);
+        Brush fntbr = new SolidBrush(Color.Black);
 
         private void sortingToContainers()
         {
-            //проблема в том что неясно как выразить itemObjHight чтобы он стал нашим временным значением
+            ////координаты контейнеров для более удобного визуализирования
+            //int xCon = 0;
+            //foreach (var container in containers) 
+            //{
+            //    xCon += container.x;
+            //    container.x = xCon;
+            //}
 
-            foreach (var container in containers)
-            {
-                foreach (var product in objectsGoods.OrderByDescending(o => o.height))
-                {
-                    if (container.heightNoUse > product.height & container.weightNoUse > product.weight)
+            //распределяем по контейнерам
+            foreach (var container in containers) 
+            {   
+                //проверяем все продукты в списке objectGoods
+                foreach (var product in objectsGoods.OrderByDescending(o => (o.weight * o.height)))
+                {   
+                    //проверяем условие помещается ли объект
+                    if (container.weight >= product.weight && container.height >= product.height && (container.products.Count != 0))
                     {
-                        container.heightNoUse -= product.height;
-                        container.weightNoUse -= product.weight;
-                        container.products.Add(product);
+                        bool check = false;
+                        //сверяемся со списком товаров в контейнере
+                        foreach (var productCont in container.products)
+                        {
+                            //проверяем возможно ли разместить сбоку
+                            if (
+                                (product.x < (productCont.x + productCont.weight))
+                                && (container.height - (productCont.y + productCont.height) >= productCont.y + product.height)
+                                && (container.weight - (productCont.x + productCont.weight) >= productCont.x + product.weight)
+                               )
+                            {
+                                product.x = productCont.x + productCont.weight;
+                                product.y = productCont.y;
+                                check = true;
+
+                                //проверяем не схож ли объект с остальными
+                                foreach (var productC in container.products)
+                                    if (
+                                        (product.x >= productC.x) && (product.x < productC.x + productC.weight)
+                                        && (product.y >= productC.y) && (product.y < productC.y + productC.height)
+                                       )
+                                    { check = false; Console.WriteLine($"Вышло: #{product.number}[{container.number}] [{product.x};{product.y}]"); }
+
+                                //if (container.products.Find( x => x.x >= product.x) == true) { check = true; }
+
+                                Console.WriteLine($"Тест №1: #{product.number}[{container.number}] [{product.x};{product.y}]");
+                                //dra.DrawString($"#{product.number}[{container.number}]", fnt, fntbr, product.x + Convert.ToInt32(product.weight), product.y + Convert.ToInt32(product.weight / 2)); //номер
+                            }
+                            //проверяем возможно ли разместить сверху
+                            else 
+                            if (
+                                (product.y < (productCont.y + productCont.height))
+                                && (container.height - (productCont.y + productCont.height) >= product.y + product.height)
+                                && (container.weight >= productCont.x + product.weight)
+                               )
+                            {
+                                product.x = productCont.x;
+                                product.y = productCont.y + productCont.height;
+                                check = true;
+
+                                //проверяем не схож ли объект с остальными
+                                foreach (var productC in container.products)
+                                    if (
+                                        (product.x >= productC.x) && (product.x < productC.x + productC.weight)
+                                        && (product.y >= productC.y) && (product.y < productC.y + productC.height)
+                                       )
+                                    { check = false; Console.WriteLine($"Вышло: #{product.number}[{container.number}] [{product.x};{product.y}]"); }
+
+                                Console.WriteLine($"Тест №2: #{product.number}[{container.number}] [{product.x};{product.y}]");
+                                //dra.DrawString($"#{product.number}", fnt, fntbr, product.x + Convert.ToInt32(product.weight / 2) + 50, product.y + Convert.ToInt32(product.weight / 2) + 50); //номер
+                            }
+                            else
+                            {
+                                //переворачиваем
+                                int xw = product.weight;
+                                product.weight = product.height;
+                                product.height = xw;
+
+                                //проверяем возможно ли перевернутый разместить сбоку
+                                if (
+                                    (product.x < (productCont.x + productCont.weight))
+                                    && (container.height - (productCont.y + productCont.height) >= productCont.y + product.height)
+                                    && (container.weight - (productCont.x + productCont.weight) >= productCont.x + product.weight)
+                                   )
+                                {
+                                    product.x = productCont.x;
+                                    product.y = productCont.y + productCont.height;
+                                    check = true;
+
+                                    //проверяем не схож ли объект с остальными
+                                    foreach (var productC in container.products)
+                                        if (
+                                            (product.x >= productC.x) && (product.x < productC.x + productC.weight)
+                                            && (product.y >= productC.y) && (product.y < productC.y + productC.height)
+                                           )
+                                        { check = false; Console.WriteLine($"Вышло: #{product.number}[{container.number}] [{product.x};{product.y}]"); }
+
+                                    Console.WriteLine($"Тест №3: #{product.number}[{container.number}] [{product.x};{product.y}]");
+                                    //dra.DrawString($"#{product.number}", fnt, fntbr, product.x + Convert.ToInt32(product.weight / 2) + 50, product.y + Convert.ToInt32(product.weight / 2) + 50); //номер
+                                }
+                                //проверяем возможно ли перевернутый разместить сверху
+                                else
+                                if (
+                                    (product.y < (productCont.y + productCont.height))
+                                    && (container.height - (productCont.y + productCont.height) >= product.y + product.height)
+                                    && (container.weight >= productCont.x + product.weight)
+                                   )
+                                {
+                                    product.x = productCont.x;
+                                    product.y = productCont.y + productCont.height;
+                                    check = true;
+
+                                    //проверяем не схож ли объект с остальными
+                                    foreach (var productC in container.products)
+                                        if (
+                                            (product.x >= productC.x) && (product.x < productC.x + productC.weight)
+                                            && (product.y >= productC.y) && (product.y < productC.y + productC.height)
+                                           )
+                                        { check = false; Console.WriteLine($"Вышло: #{product.number}[{container.number}] [{product.x};{product.y}]"); }
+
+                                    Console.WriteLine($"Тест №4: #{product.number}[{container.number}] [{product.x};{product.y}]");
+                                    //dra.DrawString($"#{product.number}", fnt, fntbr, product.x + Convert.ToInt32(product.weight / 2) + 50, product.y + Convert.ToInt32(product.weight / 2) + 50); //номер
+                                }
+                            }
+                            //Или сделать через интеграл по области допустимых значений
+
+
+                            ////проверяем не схож ли объект с остальными
+                            //foreach (var productC in container.products)
+                            //    if (
+                            //        (product.x >= productC.x) && (product.x < productC.x + productC.weight)
+                            //        && (product.y >= productC.y) && (product.y < productC.y + productC.height)
+                            //       )
+                            //    { check = false; Console.WriteLine($"Вышло: #{product.number}[{container.number}] [{product.x};{product.y}]"); }
+                        };
+
+                        if (check == true)
+                        {
+                            container.products.Add(product); //перемещаем в другой список
+                            objectsGoods.Remove(product);
+                        }
+
+                    }
+                    //если список объектов контейнера пустой, то проверяем помещается ли он и делаем первый для него объект
+                    else if ((container.weight >= product.weight & container.height >= product.height) & (container.products.Count == 0))
+                    {
+                        container.products.Add(product); //перемещаем в другой список
+                        objectsGoods.Remove(product);
                     }
                 };
             }
-
-            //Сортируем контейнеры по возрастанию
-            var sortedContainers = from c in containers
-                              orderby c.number
-                              select c;
-            foreach (Container c in sortedContainers) c.GetInfo();
         }
 
         private void loadList(string pathFile) //загрузка списка для тестов
@@ -181,30 +316,48 @@ namespace Sorting2D
 
             foreach (var item in containers)
             {
-                //Console.WriteLine($"Номер: #C{item.number}, Наименование: {item.name} [{item.height}x{item.weight}x{item.depth}], Координаты: [{item.x};{item.y};{item.z}]");
+                item.GetInfo();
             };
 
             foreach (var item in objectsGoods)
             {
-                Console.WriteLine($"Номер: #O{item.number}, Партия: #P{item.localnumber}, Наименование: {item.name} [{item.height}x{item.weight}], Координаты: [{item.x};{item.y};{item.z}]");
+                item.GetInfo();
             };
         }
-    }
 
-    class SizeComparer : IComparer<Container> //сортировка по объему
-    {
-        public int Compare(Container o1, Container o2)
+        private void testSorting()
         {
-            if (o1.weight * o1.height > o2.weight * o2.height)
+            Console.WriteLine($"До сортировки:");
+            foreach (var item in containers)
             {
-                return 1;
-            }
-            else if (o1.weight * o1.height < o2.weight * o2.height)
-            {
-                return -1;
+                item.GetInfo();
             }
 
-            return 0;
+            //Сортируем контейнеры от большего к меньшему
+            SizeComparerContainers sc = new SizeComparerContainers();
+            containers.Sort(sc);
+
+            Console.WriteLine($"");
+            Console.WriteLine($"После сортировки:");
+            foreach (var item in containers)
+            {
+                item.GetInfo();
+            }
+
+            Console.WriteLine($"");
+            Console.WriteLine($"Объекты до сортировки:");
+            foreach (var item in objectsGoods)
+            {
+                item.GetInfo();
+                //item.Visual(dra, pen); //!!! проблема с dra
+            }
+
+            Console.WriteLine($"");
+            Console.WriteLine($"Объекты после сортировки:");
+            //Сортируем продукты от большего к меньшему
+            SizeComparerProducts sco = new SizeComparerProducts();
+            objectsGoods.Sort(sco);
+            foreach (ObjectGoods o in objectsGoods) o.GetInfo();
         }
     }
 }
